@@ -157,7 +157,7 @@ const MOODS={
 };
 function mood(){return MOODS[SET.mood];}
 
-const LYRICS_PROXY="";
+const LYRICS_PROXY="https://test1.amogh1sridhar.workers.dev/";
 function parseLRC(lrc){const out=[];for(const line of lrc.split('\n')){const m=line.match(/^\s*((?:\[\d{1,2}:\d{2}(?:\.\d{1,2})?\]\s*)+)(.*)$/);if(!m)continue;const text=m[2].trim();const stamps=m[1].match(/\[\d{1,2}:\d{2}(?:\.\d{1,2})?\]/g)||[];for(const s of stamps){const mm=s.match(/\[(\d{1,2}):(\d{2})(?:\.(\d{1,2}))?\]/);if(!mm)continue;const t=(+mm[1])*60+(+mm[2])+(mm[3]?(+(mm[3].padEnd(2,'0')))/100:0);if(text)out.push({t,text});}}return out.sort((a,b)=>a.t-b.t);}
 // "director": classify each line by emotional/structural shape, like an editor's rules
 function kindFor(text){
