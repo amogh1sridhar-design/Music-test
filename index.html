@@ -161,7 +161,7 @@ const MOODS={
 };
 function mood(){return MOODS[SET.mood];}
 
-const LYRICS_PROXY="";
+const LYRICS_PROXY="https://workers-playground-shiny-breeze-04d2.amogh1sridhar.workers.dev/";
 function parseLRC(lrc){const out=[];for(const line of lrc.split('\n')){const m=line.match(/^\s*((?:\[\d{1,2}:\d{2}(?:\.\d{1,2})?\]\s*)+)(.*)$/);if(!m)continue;const text=m[2].trim();const stamps=m[1].match(/\[\d{1,2}:\d{2}(?:\.\d{1,2})?\]/g)||[];for(const s of stamps){const mm=s.match(/\[(\d{1,2}):(\d{2})(?:\.(\d{1,2}))?\]/);if(!mm)continue;const t=(+mm[1])*60+(+mm[2])+(mm[3]?(+(mm[3].padEnd(2,'0')))/100:0);if(text)out.push({t,text});}}return out.sort((a,b)=>a.t-b.t);}
 function kindFor(text){const up=text.replace(/[^A-Za-z]/g,'');if(/!$/.test(text)||(up&&up===up.toUpperCase()&&up.length>=3))return'drop';if(text.split(' ').length<=2)return'soft';return'line';}
 async function fetchLyrics(artist,title,duration){if(!LYRICS_PROXY)return null;try{const u=`${LYRICS_PROXY}/?artist=${encodeURIComponent(artist)}&title=${encodeURIComponent(title)}`+(duration?`&duration=${Math.round(duration)}`:'');const r=await fetch(u);const d=await r.json();if(!d.found)return null;if(d.synced){const lines=parseLRC(d.synced);if(lines.length)return{lines,synced:true};}if(d.plain){const arr=d.plain.split('\n').map(s=>s.trim()).filter(Boolean);return{lines:arr.map(t=>({t:null,text:t})),synced:false};}}catch(e){}return null;}
